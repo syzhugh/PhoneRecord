@@ -45,37 +45,73 @@ public class UploadUtil {
         if (!file.exists()) {
             return;
         }
-        RequestBody filebody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+        Log.i("info", ":exists");
 
-        final Request request = new Request.Builder()
-                .url("url")
-                .post(filebody)
+
+        RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("image", file.getName(), fileBody)
                 .build();
 
-        mOkHttpClient.newBuilder().writeTimeout(50, TimeUnit.SECONDS);
-        Call call = mOkHttpClient.newCall(request);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
 
-        call.enqueue(new Callback() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient okHttpClient = builder
+                //设置超时
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build();
+
+        Call call1 = okHttpClient.newCall(request);
+        call1.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                callBack.failedCallBack();
+                Log.i("info", "UploadUtil:onFailure----------------------");
             }
 
             @Override
-            public void onResponse(Call call, Response response) {
-                if (response.isSuccessful()) {
-                    try {
-                        String string = response.body().string();
-                        callBack.successCallBack(string);
-                    } catch (IOException e) {
-                        callBack.failedCallBack();
-                        e.printStackTrace();
-                    }
-                } else {
-                    callBack.failedCallBack();
-                }
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.i("info", "UploadUtil:onResponse----------------------");
             }
         });
+
+
+//        final Request request = new Request.Builder()
+//                .url(url)
+//                .post(filebody)
+//                .build();
+//
+//        mOkHttpClient.newBuilder().writeTimeout(5000, TimeUnit.SECONDS);
+//        Call call = mOkHttpClient.newCall(request);
+//
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.i("info", "UploadUtil:onFailure----------------------");
+//                callBack.failedCallBack();
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) {
+//                if (response.isSuccessful()) {
+//                    Log.i("info", "UploadUtil:onResponse----------------------");
+//                    try {
+//                        String string = response.body().string();
+//                        callBack.successCallBack(string);
+//                    } catch (IOException e) {
+//                        callBack.failedCallBack();
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//                    callBack.failedCallBack();
+//                }
+//            }
+//        });
 
     }
 
