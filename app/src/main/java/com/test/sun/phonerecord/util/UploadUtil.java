@@ -1,4 +1,4 @@
-package com.test.sun.phonerecord.Upload;
+package com.test.sun.phonerecord.util;
 
 import android.util.Log;
 
@@ -24,15 +24,19 @@ public class UploadUtil {
     private OkHttpClient mOkHttpClient;
     private UploadCallBack callBack;
 
-    public UploadUtil(UploadCallBack callBack) {
+    public UploadUtil() {
         mOkHttpClient = new OkHttpClient.Builder().build();
+    }
+
+    public UploadUtil addCallBack(UploadCallBack callBack) {
         this.callBack = callBack;
+        return this;
     }
 
     public static interface UploadCallBack {
         void failedCallBack();
 
-        void successCallBack();
+        void successCallBack(String string);
     }
 
     public void uploadFile(String url, String filePath) {
@@ -43,16 +47,13 @@ public class UploadUtil {
         }
         RequestBody filebody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
 
-
         final Request request = new Request.Builder()
                 .url("url")
                 .post(filebody)
                 .build();
 
-        OkHttpClient build = mOkHttpClient.newBuilder()
-                .writeTimeout(50, TimeUnit.SECONDS)
-                .build();
-        Call call = build.newCall(request);
+        mOkHttpClient.newBuilder().writeTimeout(50, TimeUnit.SECONDS);
+        Call call = mOkHttpClient.newCall(request);
 
         call.enqueue(new Callback() {
             @Override
@@ -61,15 +62,21 @@ public class UploadUtil {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
-                    String string = response.body().string();
-                    callBack.successCallBack();
+                    try {
+                        String string = response.body().string();
+                        callBack.successCallBack(string);
+                    } catch (IOException e) {
+                        callBack.failedCallBack();
+                        e.printStackTrace();
+                    }
                 } else {
                     callBack.failedCallBack();
                 }
             }
         });
+
     }
 
 
