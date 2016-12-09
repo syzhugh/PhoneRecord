@@ -14,7 +14,6 @@ public class MonitorService extends Service {
     //    public static final String TAG = "MonitorService";
     private TelephonyManager manager;
     private TelListener listener;
-    private TelephonyManager telephonyManager;
 
     @Override
 
@@ -22,7 +21,6 @@ public class MonitorService extends Service {
         super.onCreate();
         Log.i(TAG, "MonitorService:onCreate----------------");
         manager = (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE);
-        telephonyManager = (TelephonyManager) getSystemService(getApplicationContext().TELEPHONY_SERVICE);
         listener = new TelListener();
         manager.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
     }
