@@ -29,9 +29,9 @@ public class MRecorder {
     public void startToRecord(File file) throws IOException {
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);   //获得声音数据源
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);   // 按3gp格式输出
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        recorder.setOutputFile(file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".3gp"); //输出文件
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);   // 按3gp格式输出
+        recorder.setOutputFile(file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".aac"); //输出文件
         recorder.prepare(); //准备
         recorder.start();
 

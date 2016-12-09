@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -50,10 +52,15 @@ public class UploadUtil {
 
         RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
 
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("image", file.getName(), fileBody)
-                .build();
+        RequestBody requestBody = null;
+        try {
+            requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart(URLEncoder.encode("{\"tt\" = \"孙耀宗\",\"customer\"=\"孙策\",\"time\"=123124123123123}", "utf-8"), file.getName(), fileBody)
+                    .build();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         Request request = new Request.Builder()
                 .url(url)

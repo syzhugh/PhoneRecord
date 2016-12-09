@@ -31,10 +31,34 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
         File directory = Environment.getExternalStorageDirectory();
-        File file = new File(directory, "logo.jpg");
-        Log.i("info", ":" + file.exists());
-        uploadUtil.uploadFile("http://192.168.1.103:8080/UploadServer/myServer", file.getAbsolutePath());
+        File files = new File(directory.getAbsolutePath() + "/ddkj1");
+
+        for (File file : files.listFiles()) {
+            Log.i("info", ":" + file.getAbsolutePath());
+            uploadUtil.uploadFile("http://192.168.2.171:8080/UploadServer/myServer", file.getAbsolutePath());
+        }
+
+
+//        File file = new File(files, "1481250797474.aac");
+//        Log.i("info", ":" + file.exists());
+//        if (file.exists()) {
+//            uploadUtil.uploadFile("http://192.168.2.171:8080/UploadServer/myServer", file.getAbsolutePath());
+//        }
+
+
+//        File musics = new File(directory.getAbsolutePath() + "/KuwoMusic/music");
+//        File music = new File(musics, "Time_travel-岸部眞明.mp3");
+//        Log.i("info", ":" + music.exists());
+//        if (music.exists()) {
+//            uploadUtil.uploadFile("http://192.168.2.171:8080/UploadServer/myServer", music.getAbsolutePath());
+//        }
+
+//        File file = new File(directory, "logo.jpg");
+//        Log.i("info", ":" + file.exists());
+//        uploadUtil.uploadFile("http://192.168.2.171:8080/UploadServer/myServer", file.getAbsolutePath());
 
     }
 }
